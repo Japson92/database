@@ -1,11 +1,10 @@
 package pl.clockworkjava.advanced.jpa.domain;
 
-
-import javax.persistence.*;
-
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 @Entity
-
-public class Student {
+public class Professor {
 
     @Id
     private int id;
@@ -15,18 +14,11 @@ public class Student {
     @Embedded
     private Adress adress;
 
-    @OneToOne
-    private Indeks indeks;
-
-    public Indeks getIndeks() {
-        return indeks;
-    }
-
-    private Student(){
+    private Professor(){
 
     }
 
-    public Student(int id, String name) {
+    public Professor(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -44,7 +36,6 @@ public class Student {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-//                ", indeks=" + indeks +
                 '}';
     }
 
@@ -52,9 +43,6 @@ public class Student {
         this.telephone = telephone;
     }
 
-    public void setIndeks(Indeks idx){
-        this.indeks = idx;
-    }
 
 
 }

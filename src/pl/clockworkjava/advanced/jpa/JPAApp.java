@@ -1,5 +1,6 @@
 package pl.clockworkjava.advanced.jpa;
 
+import pl.clockworkjava.advanced.jpa.domain.Indeks;
 import pl.clockworkjava.advanced.jpa.domain.Student;
 
 import javax.persistence.EntityManager;
@@ -14,16 +15,25 @@ public class JPAApp {
    static  EntityManager entityManager = factory.createEntityManager();
 
     public static void main(String[] args) {
+        entityManager.getTransaction().begin();
+        Student pawel = entityManager.merge(new Student(0, "Pawel"));
+        Indeks indeks = entityManager.merge(new Indeks(0, "123456"));
 
-        //CRUD
-        // create
-        createStudent();
-        // read
-        readStudents();
-        // update
-        updateStudents();
-        // delete
-        deleteStudents();
+        pawel.setIndeks(indeks);
+
+        pawel = entityManager.merge(pawel);
+
+        indeks.setOwner(pawel);
+
+        entityManager.merge(indeks);
+
+        entityManager.getTransaction().commit();
+        System.out.println(pawel);
+
+        Indeks idx = entityManager.find(Indeks.class, 0);
+        System.out.println(idx);
+
+
     }
 
     private static void deleteStudents() {
