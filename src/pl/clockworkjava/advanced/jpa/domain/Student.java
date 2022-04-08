@@ -2,9 +2,10 @@ package pl.clockworkjava.advanced.jpa.domain;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-
 public class Student {
 
     @Id
@@ -23,19 +24,23 @@ public class Student {
     @ManyToOne
     private University university;
 
+    @ManyToMany
+    private Set<Classes> classes;
+
     public Student(String name, String indexNumber) {
         this.name = name;
         this.indeks = new Indeks(indexNumber);
-    }
-
-
-    public Indeks getIndeks() {
-        return indeks;
+        this.classes = new HashSet<>();
     }
 
     private Student(){
 
     }
+
+    public Indeks getIndeks() {
+        return indeks;
+    }
+
 
     public Student(String name) {
         this.name = name;
@@ -66,5 +71,9 @@ public class Student {
 
     public void setUniversity(University university) {
         this.university = university;
+    }
+
+    public void addClasses(Classes classes){
+        this.classes.add(classes);
     }
 }
