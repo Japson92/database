@@ -1,11 +1,10 @@
 package pl.clockworkjava.advanced.jpa;
 
+import pl.clockworkjava.advanced.jpa.domain.Indeks;
 import pl.clockworkjava.advanced.jpa.domain.Student;
 import pl.clockworkjava.advanced.jpa.domain.University;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.List;
 
 public class JPAApp {
@@ -15,20 +14,29 @@ public class JPAApp {
    static  EntityManager entityManager = factory.createEntityManager();
 
     public static void main(String[] args) {
+
+        createData();
+        TypedQuery<QueryResult> query = entityManager.createQuery("SELECT new pl.clockworkjava.advanced.jpa.QueryResult(s.name, s.indeks.number) FROM Student s WHERE s.name IN ('Pawel', 'John')", QueryResult.class);
+
+      //  query.getResultList().forEach(System.out::println);
+
+        List<CountResult> resultList = entityManager.createQuery("SELECT new pl.clockworkjava.advanced.jpa.CountResult(s.name, COUNT(s)) FROM Student s GROUP BY s.name HAVING s.name IN ('Pawel', 'John') ORDER BY s.name", CountResult.class).getResultList();
+        resultList.forEach(System.out::println);
+
+
+//        TypedQuery<Indeks> query = entityManager.createQuery("SELECT s.indeks FROM Student s WHERE s.name = :studentName", Indeks.class);
+//        query.setParameter("studentName","John");
+//        System.out.println(query.getSingleResult());
+    }
+
+    private static void createData() {
         entityManager.getTransaction().begin();
-        Student pawel = entityManager.merge(new Student("Pawel", "123456"));
-        University psk = entityManager.merge(new University("PSK"));
-
-        pawel.setUniversity(psk);
-        psk.addStudent(pawel);
-
-        entityManager.merge(pawel);
-        entityManager.merge(psk);
+        entityManager.merge(new Student("Pawel", "123456"));
+        entityManager.merge(new Student("John", "654321"));
+        entityManager.merge(new Student("Pawel", "123459"));
+        entityManager.merge(new Student("Pawel", "126556"));
 
         entityManager.getTransaction().commit();
-
-        University university = entityManager.find(University.class, psk.getId());
-        System.out.println(university);
     }
 
     private static void deleteStudents() {
