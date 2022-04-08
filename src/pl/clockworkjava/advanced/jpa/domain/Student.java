@@ -11,6 +11,7 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
+
     private String telephone;
 
     @Embedded
@@ -18,6 +19,9 @@ public class Student {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Indeks indeks;
+
+    @ManyToOne
+    private University university;
 
     public Student(String name, String indexNumber) {
         this.name = name;
@@ -60,4 +64,7 @@ public class Student {
     }
 
 
+    public void setUniversity(University university) {
+        this.university = university;
+    }
 }
