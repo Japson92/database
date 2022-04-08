@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String telephone;
@@ -15,8 +16,14 @@ public class Student {
     @Embedded
     private Adress adress;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Indeks indeks;
+
+    public Student(String name, String indexNumber) {
+        this.name = name;
+        this.indeks = new Indeks(indexNumber);
+    }
+
 
     public Indeks getIndeks() {
         return indeks;
@@ -26,14 +33,10 @@ public class Student {
 
     }
 
-    public Student(int id, String name) {
-        this.id = id;
+    public Student(String name) {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
