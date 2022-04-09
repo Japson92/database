@@ -1,8 +1,6 @@
 package pl.clockworkjava.advanced.jpa;
 
-import pl.clockworkjava.advanced.jpa.domain.Indeks;
 import pl.clockworkjava.advanced.jpa.domain.Student;
-import pl.clockworkjava.advanced.jpa.domain.University;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,12 +16,13 @@ public class JPAApp {
         createData();
         TypedQuery<QueryResult> query = entityManager.createQuery("SELECT new pl.clockworkjava.advanced.jpa.QueryResult(s.name, s.indeks.number) FROM Student s WHERE s.name IN ('Pawel', 'John')", QueryResult.class);
 
-      //  query.getResultList().forEach(System.out::println);
+        query.getResultList().forEach(System.out::println);
 
         List<CountResult> resultList = entityManager.createQuery("SELECT new pl.clockworkjava.advanced.jpa.CountResult(s.name, COUNT(s)) FROM Student s GROUP BY s.name HAVING s.name IN ('Pawel', 'John') ORDER BY s.name", CountResult.class).getResultList();
         resultList.forEach(System.out::println);
 
-
+        entityManager.createNamedQuery("Student.GetAll", Student.class).getResultList().forEach(System.out::println);
+        entityManager.createNamedQuery("Student.byName", Student.class).setParameter("name", "Pawel").getResultList().forEach(System.out::println);
 //        TypedQuery<Indeks> query = entityManager.createQuery("SELECT s.indeks FROM Student s WHERE s.name = :studentName", Indeks.class);
 //        query.setParameter("studentName","John");
 //        System.out.println(query.getSingleResult());
@@ -31,6 +30,7 @@ public class JPAApp {
 
     private static void createData() {
         entityManager.getTransaction().begin();
+
         entityManager.merge(new Student("Pawel", "123456"));
         entityManager.merge(new Student("John", "654321"));
         entityManager.merge(new Student("Pawel", "123459"));

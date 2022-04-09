@@ -6,6 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Student.GetAll", query = "SELECT s FROM Student s"),
+        @NamedQuery(name = "Student.byName", query = "SELECT s FROM Student s WHERE s.name = :name")
+})
+
 public class Student {
 
     @Id
@@ -77,3 +82,5 @@ public class Student {
         this.classes.add(classes);
     }
 }
+
+
